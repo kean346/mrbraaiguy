@@ -4,16 +4,22 @@ import {mongodbAdapter} from 'better-auth/adapters/mongodb';
 import {z} from 'zod';
 import {db,mongo} from '@/server/db';
 export const runtime='nodejs';
-const input=z.object({code:z.string().min(32).max(256),password:z.string().min(12).max(128)}).strict();
+const input=z.object({
+ code:z.string().trim().min(32,'The setup code must be at least 32 characters.').max(256),
+ password:z.string().min(12,'The new password must be at least 12 characters.').max(128),
+}).strict();
 const reply=(message:string,status:number)=>Response.json({error:message},{status,headers:{'Cache-Control':'no-store'}});
 export async function POST(request:Request){
- const expected=process.env.OWNER_SETUP_CODE,owner=process.env.OWNER_EMAIL?.trim().toLowerCase(),secret=process.env.BETTER_AUTH_SECRET;
+ const expected=process.env.OWNER_SETUP_CODE?.trim(),owner=process.env.OWNER_EMAIL?.trim().toLowerCase(),secret=process.env.BETTER_AUTH_SECRET;
  const missing=[...(!expected||expected.length<32?['OWNER_SETUP_CODE (32+ characters)']:[]),...(!owner?['OWNER_EMAIL']:[]),...(!secret||secret.length<32?['BETTER_AUTH_SECRET (32+ characters)']:[]),...(!process.env.MONGODB_URI?['MONGODB_URI']:[]),...(!process.env.BETTER_AUTH_URL?['BETTER_AUTH_URL']:[])];
  if(missing.length)return reply('Owner setup needs these Production environment settings: '+missing.join(', ')+'. Save them in Vercel and redeploy.',503);
  const origin=request.headers.get('origin');if(origin!==process.env.BETTER_AUTH_URL)return reply('Invalid request origin.',403);
  if(!request.headers.get('content-type')?.includes('application/json'))return reply('Use a JSON request.',415);
  const raw=await request.text();if(raw.length>2048)return reply('Request too large.',413);
- let data:z.infer<typeof input>;try{data=input.parse(JSON.parse(raw))}catch{return reply('Enter the setup code and a password of at least 12 characters.',422)}
+ let parsed:unknown;try{parsed=JSON.parse(raw)}catch{return reply('The setup request could not be read. Reload the page and try again.',400)}
+ const validated=input.safeParse(parsed);
+ if(!validated.success)return reply(validated.error.issues[0]?.message||'Check the setup code and password.',422);
+ const data=validated.data;
  await mongo.connect();
  const ip=(request.headers.get('x-forwarded-for')||'unknown').split(',')[0].trim().slice(0,80);
  const key='owner-setup:'+createHash('sha256').update(ip+':'+Math.floor(Date.now()/900000)).digest('hex');
