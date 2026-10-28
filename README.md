@@ -13,7 +13,7 @@ Requirements: Node.js 22+, npm, Docker for the local replica set, and Chromium (
 5. Optionally run `npm run seed:demo` to create one synthetic client, menu and draft. It is idempotent.
 6. `npm run dev`, then open `http://localhost:3000/login` and sign in with the owner credentials.
 
-`npm run build` and `npm run start` serve the production build. A real business deployment needs a dedicated MongoDB Atlas replica set URI, a stable HTTPS `BETTER_AUTH_URL`, a separately stored strong auth secret and an installed Chromium binary for server PDF generation. The PDF preview and export are server-rendered with Chromium from the last saved draft or frozen issued version; unsaved editor changes require Save draft before the preview updates. Vercel does not provide this project’s local `/usr/bin/chromium` path by default, so package a compatible serverless binary or use a supported PDF service before deploying there. Confirm the quote render duration and binary availability before deployment. Set secrets only in the host's secret manager. Restrict database network access and credentials to this app. Do not copy the local database or synthetic test credentials into production.
+`npm run build` and `npm run start` serve the production build. A real business deployment needs a dedicated MongoDB Atlas replica set URI, a stable HTTPS `BETTER_AUTH_URL`, a separately stored strong auth secret and an installed Chromium binary for server PDF generation. The PDF preview and export are server-rendered with Chromium from the last saved draft or frozen issued version; unsaved editor changes require Save draft before the preview updates. On Vercel the app now selects the packaged `@sparticuz/chromium` binary; local development continues to use `/usr/bin/chromium`. Confirm PDF preview and export in the actual deployment before business use, since a local build does not prove Vercel runtime behavior. Set secrets only in the host's secret manager. Restrict database network access and credentials to this app. Do not copy the local database or synthetic test credentials into production.
 
 ## What works
 
@@ -46,3 +46,7 @@ The local Docker volume persists across app restarts. For production, schedule e
 ## Architecture
 
 Next.js App Router and React serve the owner interface; Better Auth stores users/sessions in MongoDB. The official MongoDB driver stores owner-scoped clients, menu templates, quotes, settings, audit records and issued versions. Zod validates mutations, Decimal.js computes minor-unit totals, and Chromium renders A4 PDFs from the same public projection used for issue. A local replica set enables transactional reference allocation and version freezing. [DESIGN.md](DESIGN.md) and [UX-CONTRACT.md](UX-CONTRACT.md) record the visual and interaction contracts.
+
+## Vercel and Atlas production setup
+
+See [docs/vercel-setup.md](docs/vercel-setup.md) for the exact environment variables, Atlas network setup, owner creation, redeployment and checks. The public design preview works without those settings; the private dashboard requires them.

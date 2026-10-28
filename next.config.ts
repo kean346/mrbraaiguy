@@ -8,8 +8,9 @@ const sharedHeaders = [
 const privateFrameHeader = {key:'X-Frame-Options',value:'SAMEORIGIN'};
 
 const config: NextConfig = {
-  serverExternalPackages:['mongodb','puppeteer-core'],
+  serverExternalPackages:['mongodb','puppeteer-core','@sparticuz/chromium'],
   poweredByHeader:false,
+  outputFileTracingIncludes:{'/api/workspace/*':['./node_modules/@sparticuz/chromium/bin/**']},
   async headers(){return [
     {source:'/:path*',headers:sharedHeaders},
     {source:'/:section(dashboard|quotes|clients|menus|settings|audit)/:path*',headers:[privateFrameHeader]},
