@@ -15,6 +15,7 @@ const config: NextConfig = {
     {source:'/:path*',headers:sharedHeaders},
     {source:'/:section(dashboard|quotes|clients|menus|settings|audit)/:path*',headers:[privateFrameHeader]},
     {source:'/login',headers:[privateFrameHeader]},
+    {source:'/setup',headers:[privateFrameHeader]},
     {source:'/api/:path*',headers:[privateFrameHeader]},
   ];},
 };

@@ -12,9 +12,10 @@ The public `/preview.html` is a synthetic design preview. `/dashboard`, sign-in 
    | `BETTER_AUTH_URL` | `https://mrbraaiguy.vercel.app` |
    | `BETTER_AUTH_SECRET` | New random secret of at least 32 characters, generated securely; use the same value for initial owner provisioning |
    | `OWNER_EMAIL` | The exact email address to be allowed into the private app |
+   | `OWNER_SETUP_CODE` | Unique cryptographically random code of at least 32 characters, stored privately only during initial setup |
 
 3. Redeploy `main` so Vercel's production functions receive the new variables. Check Runtime Logs for connection or authentication errors. A Ready build alone does not validate the server routes.
-4. Create the first owner account **once**, from a trusted terminal with network access to Atlas. In a local, untracked `.env.local` use the production `MONGODB_URI`, `MONGODB_DB`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET` and `OWNER_EMAIL`. Temporarily add `OWNER_BOOTSTRAP_PASSWORD` (12+ characters), then run `npm run owner:create`. Remove `OWNER_BOOTSTRAP_PASSWORD` immediately afterward. Do not use the local demo database or demo credentials in production.
+4. After redeploying, visit `/setup` in an external browser. Enter the private `OWNER_SETUP_CODE` and choose a strong password. The route creates only the `OWNER_EMAIL` account, enforces five attempts per 15 minutes per client IP, and rejects all subsequent setup requests once the account exists. Remove `OWNER_SETUP_CODE` from Vercel after success and redeploy. Never send the code or password in chat.
 5. Visit `/login` in an external browser, sign in as the owner, open `/dashboard`, and create a synthetic draft. In Business settings, confirm VAT registration/rate, sender identity and approved terms before attempting to issue. Verify PDF preview/download on Vercel; the code includes a serverless Chromium package, but its actual hosted runtime must be checked.
 
 No real customer data should be imported until access, backups and a restore test are in place. Connected email and Zoho import remain unconfigured features. This setup does not change the public Mr Braai Guy website.
