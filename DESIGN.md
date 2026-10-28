@@ -3,12 +3,12 @@ version: alpha
 name: Ember Glass
 description: A private open-fire dining studio with a smoked-glass workspace and editorial proposals.
 colors:
-  background: '#171714'
-  surface: '#302B27'
-  primary: '#A56A42'
-  accent: '#D8B98B'
-  foreground: '#F1ECE2'
-  muted: '#B9B2A7'
+  background: '#100F0E'
+  surface: '#1A1917'
+  primary: '#C62838'
+  accent: '#D7A33B'
+  foreground: '#F7F5F0'
+  muted: '#AAA7A1'
   danger: '#F0A59B'
   success: '#A9C5A1'
 typography:
@@ -34,7 +34,7 @@ components:
 
 ## Overview
 
-A chef's quiet studio after the coals have settled: dark smoked surfaces, copper hardware, and an ivory proposal laid on the workbench. Jay's primary job is composing a bespoke experience with trustworthy prices, using a laptop or phone in South Africa. Product register on every route; English interface, en-ZA money and Africa/Johannesburg business dates. Sources: docs/source-reconciliation.md and the master build brief. The missing screenshot and blocked website mean this follows the explicit palette and supplied official logo, not an inspected screenshot.
+A chef's quiet studio after the coals have settled: dark smoked surfaces, gold accents, and an ivory proposal laid on the workbench. Jay's primary job is composing a bespoke experience with trustworthy prices, using a laptop or phone in South Africa. Product register on every route; English interface, en-ZA money and Africa/Johannesburg business dates. Sources: docs/source-reconciliation.md and the master build brief. The owner supplied a current website screenshot on 2026-10-28. The app palette now follows its near-black, white, warm-gold and crimson identity while retaining the separate ivory customer proposal. The earlier palette was an unverified interpretation of the brief.
 
 The signature is the contrast between the private smoked-glass workbench and the light editorial customer document. A giant hero, decorative charts and revenue guesses would hinder the job; the dashboard instead opens with upcoming work and a New quote action. Fonts are licensed OFL packages, self-hosted.
 
@@ -42,7 +42,7 @@ Token ownership: this seed documents accepted values; src/app/globals.css is the
 
 ## Colors
 
-Charcoal owns the canvas, smoky brown the glass layers, bone the main text. Copper is a restrained border or dark-backed accent; bronze carries high-contrast action text and focus. Muted text stays readable over glass. Success and danger include explicit text/icons. The PDF owns an ivory/charcoal print surface and fine copper rules; never inherit the dark dashboard. Forced-colors defers to system colors.
+Near-black owns the canvas, nearly black charcoal the panels, warm gold carries navigation accents and focus, and crimson is reserved for primary actions. Soft white carries text. The supplied website screenshot shows this near-black, white, gold and red palette. Customer PDFs retain an ivory page, charcoal type and fine gold rules for print readability. Muted text stays readable over glass. Success and danger include explicit text/icons. The PDF owns an ivory/charcoal print surface and fine warm rules; it does not inherit the dashboard background. Forced-colors defers to system colors.
 
 ## Typography
 
@@ -54,7 +54,7 @@ Floating left rail on desktop; main canvas with generous natural document scroll
 
 ## Elevation & Depth
 
-Fine translucent borders and one restrained glass surface establish hierarchy. Keep blur subtle and behind text. Dialog elevation is reserved for decisions; no excessive glow, animated particles or nested card forest.
+A fixed firelit charcoal canvas gives glass surfaces something real to reveal. Shared dashboard cards, quote sections and the navigation rail use restrained translucency, warm highlight edges and 20–24px backdrop blur. Controls stay dark enough for legible text; the preview remains opaque ivory because it represents the customer PDF. Reduced-transparency and blur-unsupported environments receive solid dark surfaces. Dialog elevation stays reserved for decisions; there are no animated particles or neon glows.
 
 ## Shapes
 
