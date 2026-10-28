@@ -1,0 +1,1 @@
+'use client';import {useParams} from 'next/navigation';import {ClientForm} from '@/components/client-form';export default function Page(){const {id}=useParams<{id:string}>();return <ClientForm id={id}/>}
