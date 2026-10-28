@@ -13,13 +13,13 @@ Requirements: Node.js 22+, npm, Docker for the local replica set, and Chromium (
 5. Optionally run `npm run seed:demo` to create one synthetic client, menu and draft. It is idempotent.
 6. `npm run dev`, then open `http://localhost:3000/login` and sign in with the owner credentials.
 
-`npm run build` and `npm run start` serve the production build. A real business deployment needs a dedicated MongoDB Atlas replica set URI, a stable HTTPS `BETTER_AUTH_URL`, a separately stored strong auth secret and an installed Chromium binary for server PDF generation. Confirm your hosting plan supports Chromium and the quote render duration before deployment. Set secrets only in the host's secret manager. Restrict database network access and credentials to this app. Do not copy the local database or synthetic test credentials into production.
+`npm run build` and `npm run start` serve the production build. A real business deployment needs a dedicated MongoDB Atlas replica set URI, a stable HTTPS `BETTER_AUTH_URL`, a separately stored strong auth secret and an installed Chromium binary for server PDF generation. The PDF preview and export are server-rendered with Chromium from the last saved draft or frozen issued version; unsaved editor changes require Save draft before the preview updates. Vercel does not provide this project’s local `/usr/bin/chromium` path by default, so package a compatible serverless binary or use a supported PDF service before deploying there. Confirm the quote render duration and binary availability before deployment. Set secrets only in the host's secret manager. Restrict database network access and credentials to this app. Do not copy the local database or synthetic test credentials into production.
 
 ## What works
 
 | Capability | Status | Notes |
 | --- | --- | --- |
-| Owner sign-in, private routes and downloads | Working locally | Better Auth, owner email gate, no public sign-up |
+| Owner sign-in, private routes and downloads | Working locally | Better Auth, owner email gate, no public sign-up; password recovery is not implemented |
 | Clients | Working locally | Create/edit/search/archive/restore, quote history, basic consent status |
 | Menu vault | Working locally | Rich paste/edit, sanitisation, search/duplicate, independent quote copy |
 | Proposal studio | Working locally | Draft autosave, optional child rate, extra states, explicit tax basis, PDF preview |
@@ -27,7 +27,7 @@ Requirements: Node.js 22+, npm, Docker for the local replica set, and Chromium (
 | Issue and history | Working locally | Frozen numbered PDF and snapshot, revisions, manual response status, audit |
 | Dashboard and business settings | Working locally | Counts reflect quotations, not payments or revenue; settings gate issue |
 | Manual communication | Working locally | PDF download and copyable email text; attachment and send happen in the owner's email app |
-| Zoho Books CSV import | Requires integration | No customer data imported during this build; source mapping and duplicate review must precede a real import |
+| Zoho Books CSV import | Future | CSV mapping, review, deduplication and import are not implemented; no customer data was imported |
 | Connected email and campaigns | Requires integration | Provider identity and approval/consent flow are unconfigured; no send claim |
 | Shopping list and advanced snippets | Future | Do not infer procurement quantities from the static historical sheet |
 
@@ -39,7 +39,7 @@ Customer PDFs are generated from a sanitized public projection. Private cost lin
 
 ## Checks and data care
 
-Run `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`. Browser integration needs the local database, owner account and a local-only `E2E_OWNER_PASSWORD` matching that owner in `.env.local`; then run `npm run test:e2e`. The browser test creates synthetic records, exercises issue/revision/history and writes screenshots plus a sample PDF under `/tmp/ember-glass-evidence/`. Remove `E2E_OWNER_PASSWORD` after testing. The static premium UI audit result is in `docs/premium-audit.json`.
+Run `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`. Browser integration needs the local database, owner account and a local-only `E2E_OWNER_PASSWORD` matching that owner in `.env.local`; then run `npm run test:e2e`. The browser tests create synthetic records, exercise a real UI create/edit/save/reload journey plus issue/revision/history, and write screenshots plus a sample PDF under `artifacts/` (Git-ignored). Remove `E2E_OWNER_PASSWORD` after testing. The static premium UI audit result is in `docs/premium-audit.json`.
 
 The local Docker volume persists across app restarts. For production, schedule encrypted Atlas backups with point-in-time recovery appropriate to your retention needs. Test restoring a backup into a separate, access-controlled database before relying on it. Limit access to source contact information in `docs/source-analysis/`; the directory is Git-ignored and must never be served. No real contact data, customer PDFs or credentials belong in Git or public assets.
 
