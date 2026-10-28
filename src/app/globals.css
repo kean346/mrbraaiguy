@@ -8,7 +8,8 @@ body{
     radial-gradient(ellipse 58rem 36rem at 83% 9%,rgba(118,64,28,.29),transparent 72%),
     radial-gradient(ellipse 42rem 31rem at 17% 58%,rgba(82,42,28,.22),transparent 76%),
     linear-gradient(135deg,#13110f 0%,#0b0c0b 49%,#17110e 100%);
-  background-attachment:fixed;
+  background-repeat:no-repeat;
+  background-color:#100f0e;
 }
 .rail{
   background:rgba(16,15,14,.73);
@@ -53,3 +54,5 @@ body{
 @media (forced-colors:active){
   .panel,.section-panel,.kpi,.repeater-row,.rail,.topbar{border:1px solid CanvasText;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 }
+
+html{background:#100f0e}body{min-height:100vh}
