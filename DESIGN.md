@@ -79,3 +79,7 @@ Lucide icons use consistent 18–20px strokes with labels for primary navigation
 - Do preserve issued PDFs and label every total as a quotation, never collected revenue.
 - Don't use fictional metrics, stock logos, unrelated photography or generic SaaS gradients.
 - Don't signal successful saving, sending or payment without a verified event.
+
+## Contrast refinement
+
+Cards and the top bar use subtle warm-ivory borders at 15% opacity and smoked charcoal fills, without the button rim. Buttons retain liquid reflections at reduced opacity, with warm parchment arrow discs instead of brilliant white. Keep text and keyboard focus legible; soften decorative contrast rather than reducing content contrast.
