@@ -113,3 +113,8 @@ a.button.primary::after{content:'›';flex:0 0 30px;width:30px;height:30px;displ
 @media(prefers-reduced-motion:reduce){.button,.glass-arrow,a.button.primary::after{transition:none}.button:hover:not(:disabled),.button:active:not(:disabled),.button:hover .glass-arrow,.button:hover::after{transform:none}}
 @media(prefers-reduced-transparency:reduce){.button,.rail,.panel,.section-panel,.kpi,.kpi:nth-child(2n),.repeater-row{background:#28251f;backdrop-filter:none;-webkit-backdrop-filter:none}.button::before{display:none}}
 @media(forced-colors:active){.button,.rail,.panel,.section-panel,.kpi,.repeater-row{border:1px solid ButtonText;box-shadow:none}.button::before,.circle-overlay{display:none}}
+
+/* Only the six main Overview surfaces receive the warm hover border. */
+.overview-screen .kpi-grid>.kpi,.overview-screen .dashboard-grid>.panel{transition:border-color .2s ease}
+.overview-screen .kpi-grid>.kpi:hover,.overview-screen .kpi-grid>.kpi:focus-within,
+.overview-screen .dashboard-grid>.panel:hover,.overview-screen .dashboard-grid>.panel:focus-within{border-color:var(--bronze)}
