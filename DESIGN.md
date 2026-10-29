@@ -66,6 +66,8 @@ A fixed firelit charcoal canvas gives glass surfaces something real to reveal. S
 
 ## Components
 
+The supplied liquid-glass button CSS is the source of the shared reflective rim (`--glass-rim` in globals.css), inset highlights, pill buttons, circular arrow and hover/press motion. Responsive control sizes and light text adapt the light-background example to this dark workspace. Decorative layers ignore pointer events; no global contrast filter or high z-index interferes with menus or dialogs. Panels and top navigation share the rim; customer PDF styling remains editorial. Reduced-motion and reduced-transparency preferences retain usable controls.
+
 Shared Button/Field/Select/Textarea/Feedback/Dialog primitives own all screens. Native select and date/time popups are intentionally platform-owned. Primary actions use clear verb labels, muted controls have hover/focus/active feedback, disabled controls cannot run. Busy states retain width; status uses one live region plus persistent errors.
 
 Lucide icons use consistent 18–20px strokes with labels for primary navigation. Motion is 160ms for hover/state only and disabled under reduced motion. Scrollbars are global, visible, tokenized with standards and WebKit fallbacks, and use system colors under forced colors.

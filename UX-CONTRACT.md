@@ -46,3 +46,6 @@ Strict Zod on every external mutation, bounded strings/arrays/prices; client fie
 ## Verification
 
 Required: npm run typecheck, npm run lint, npm test, npm run build, npm run test:e2e, design lint, premium static audit. Browser desktop 1440/1280, tablet and phone, keyboard, dialog/open select, no-results, errors, reload persistence, long menu, reduced motion. Mongo integration covers currency, concurrency, auth, immutable versions and PDF privacy. Human business/legal approval and Atlas/backup verification remain production prerequisites, not claims inferred from tests.
+# Client maintenance
+
+The client list provides an explicit Edit client link. Editing loads only editable schema fields, excluding stored metadata. Saving returns to Clients. Delete requires an app-owned confirmation, revision check and owner authorization. Permanent deletion is allowed only for clients without linked quotations; linked clients can be archived. Client deletion and quote linking coordinate through transactional writes to prevent dangling client references. Issued PDF snapshots remain unchanged.
