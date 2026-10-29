@@ -52,7 +52,9 @@ The navigation uses the Mr Braai Guy logo alone. It appears bright white and pro
 
 ## Layout
 
-Floating left rail on desktop; main canvas with generous natural document scrolling. Desktop composer has a central authoring column and a sticky preview where width permits. Below 1100px preview becomes a deliberate tab and fields stack; phone navigation remains labelled and usable. Tables scroll horizontally without clipping actions. Twenty records per server page; no unbounded lists. Controls at least 40px, gaps 12–24px. Avoid fixed heights on shared form ancestors.
+Horizontal glass navigation across the top, with the white logo, capsule tabs and workspace lock. Below 1100px tabs occupy their own row; on phones they scroll horizontally with visible labels. The main canvas keeps natural document scrolling. Desktop composer has a central authoring column and a sticky preview where width permits. Tables scroll horizontally without clipping actions. Twenty records per server page; no unbounded lists. Controls at least 40px, gaps 12–24px. Avoid fixed heights on shared form ancestors.
+
+The October 29 revision uses the supplied video as inspiration, not proprietary template source. Soft white reflective edges and charcoal translucency retain the existing gold/crimson palette. Page entry is a restrained 320ms fade and 7px rise; reduced motion disables it. The implementation is custom CSS with no added animation dependency.
 
 ## Elevation & Depth
 

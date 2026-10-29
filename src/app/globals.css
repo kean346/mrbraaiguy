@@ -60,3 +60,31 @@ html{background:#100f0e}body{min-height:100vh}
 /* Mr Braai Guy is the sole product mark in the workspace rail. */
 .rail .brand{display:flex;align-items:center;justify-content:center;padding:0 4px 28px}
 .rail .brand img{display:block;width:min(100%,176px);height:auto;max-height:112px;object-fit:contain;filter:brightness(0) invert(1);opacity:1}
+
+/* Horizontal glass workspace: shared by every private screen. */
+.app-shell{display:block;padding:16px 22px}
+.rail{position:sticky;top:16px;width:100%;height:auto;min-height:86px;padding:10px 20px;display:flex;flex-direction:row;align-items:center;gap:24px;overflow:visible;border:1px solid #ffffff26;border-radius:24px;background:linear-gradient(120deg,#ffffff12,#ffffff05),#18161391;box-shadow:inset 0 1px 0 #ffffff29,0 12px 38px #0004;backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%)}
+.rail .brand{display:flex;padding:0;flex:0 0 104px}
+.rail .brand img{width:104px;height:66px;max-height:none}
+.rail-label,.rail .owner-chip{display:none}
+.rail nav{display:flex;gap:4px;padding:5px;margin:auto;background:#00000026;border:1px solid #ffffff12;border-radius:100px;overflow-x:auto}
+.rail .nav-link{width:auto;flex-shrink:0;padding:12px 15px;gap:8px;border-radius:100px;font-size:12px;white-space:nowrap;transition:background .24s ease,box-shadow .24s ease,color .24s ease,transform .24s ease}
+.rail .nav-link span{display:inline}
+.rail .nav-link svg{width:16px;height:16px}
+.rail .nav-link:hover{background:#ffffff12;transform:translateY(-1px)}
+.rail .nav-link.active{color:#fff;background:linear-gradient(150deg,#ffffff26,#ffffff0c);box-shadow:inset 0 1px 0 #ffffff42,0 3px 12px #0003}
+.rail-bottom{display:block;margin:0;padding:0;border:0;flex-shrink:0}
+.rail .logout{font-size:11px;color:var(--muted)}
+.topbar{position:static;background:transparent;border:0;height:72px;padding:0 22px;backdrop-filter:none;-webkit-backdrop-filter:none}
+.main-content{max-width:1650px;padding:22px 22px 80px;animation:workspace-arrive .32s cubic-bezier(.22,.68,.2,1) both}
+@keyframes workspace-arrive{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.panel,.section-panel,.kpi,.repeater-row{border-radius:18px;background:linear-gradient(135deg,#ffffff12,#ffffff03 48%),#24211c70;border-color:#ffffff26;box-shadow:inset 0 1px 0 #ffffff20,0 12px 32px #0002;backdrop-filter:blur(24px) saturate(135%);-webkit-backdrop-filter:blur(24px) saturate(135%)}
+.kpi:nth-child(2n){background:linear-gradient(135deg,#d7a33b14,#ffffff03 65%),#24211c70}
+.segmented{border-radius:100px;background:#ffffff08;padding:5px;box-shadow:inset 0 1px 0 #ffffff12}
+.segmented button{border-radius:100px;transition:background .22s ease,color .22s ease,box-shadow .22s ease}
+.segmented button.active{background:#ffffff20;box-shadow:inset 0 1px 0 #ffffff30,0 2px 8px #0002}
+@media(max-width:1100px){.rail{gap:12px;padding:10px 14px;flex-wrap:wrap}.rail nav{order:3;flex-basis:100%;justify-content:center}.rail-bottom{margin-left:auto}.rail .brand img{width:88px;height:56px}.rail .brand{flex-basis:88px}}
+@media(max-width:600px){.app-shell{padding:8px}.rail{top:8px;border-radius:20px;gap:8px}.rail nav{justify-content:flex-start;margin:0;scrollbar-gutter:auto}.rail .nav-link{padding:10px 13px}.topbar{padding:0 10px;gap:10px}.topbar-name{font-size:8px;letter-spacing:.08em}.topbar-name span{padding:0 4px}.main-content{padding:16px 8px 60px}.topbar-new{padding:10px}.rail .brand img{width:78px;height:50px}}
+@media(prefers-reduced-motion:reduce){.main-content{animation:none}.rail .nav-link:hover{transform:none}}
+@media(prefers-reduced-transparency:reduce){.rail,.panel,.section-panel,.kpi,.kpi:nth-child(2n),.repeater-row{background:#24211e;backdrop-filter:none;-webkit-backdrop-filter:none}}
+@supports not (backdrop-filter:blur(1px)){.rail,.panel,.section-panel,.kpi,.kpi:nth-child(2n),.repeater-row{background:#24211e}}
