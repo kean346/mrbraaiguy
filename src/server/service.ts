@@ -1,4 +1,5 @@
 import 'server-only';
+import {deliveryConfigured,sendQuotation} from './delivery';
 import { Binary, type Document, type ClientSession, type Filter } from 'mongodb';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
@@ -7,7 +8,7 @@ import { HttpError } from './auth';
 import { clientSchema,quoteSchema,menuSchema,settingsSchema,defaultSettings,newQuote,type Quote,type QuoteData,type Client,type Settings,type Menu } from '@/domain/schema';
 import { costingEngine } from '@/domain/pricing';
 import { cleanMenu } from './sanitize';
-import { publicSnapshot,renderPdf } from './pdf';
+import { publicSnapshot,renderPdf,proposalHtml } from './pdf';
 const revision=z.number().int().positive();
 const revBody=z.object({revision}).strict();
 const idSchema=z.string().uuid();
@@ -49,12 +50,23 @@ export async function workspace(ownerId:string,method:string,segments:string[],u
   if(method==='POST'&&operation==='duplicate'){const source=await owned('menus',id,ownerId);const doc={...stamp(ownerId),name:`${source.name} (copy)`.slice(0,160),html:source.html};await collection('menus').insertOne(doc);await audit(ownerId,'Duplicated menu template',doc._id,source.name);return serialize<Menu>(doc);}
  }
  if(resource==='quotes'){
+  if(method==='GET'&&operation==='delivery'){await owned('quotes',id,ownerId);return {configured:deliveryConfigured()};}
+  if(method==='POST'&&operation==='send')return sendQuotation(ownerId,id,body);
+  if(method==='POST'&&operation==='live-preview'){
+   const saved=serialize<Quote>(await owned('quotes',id,ownerId));
+   if(saved.status!=='draft')throw new HttpError(409,'Use the issued PDF for this quotation.');
+   const data=quoteSchema.parse(body);
+   const client=data.clientId?serialize<Client>(await owned('clients',data.clientId,ownerId)):{name:'Client to be selected',company:'',email:'',phone:'',billing:''} as Client;
+   const snapshot=publicSnapshot({...saved,...data},client,await getSettings(ownerId),0);
+   return {html:await proposalHtml(snapshot,true)};
+  }
+
   if(method==='POST'&&!id){const input=z.object({clientId:z.string().uuid().optional()}).strict().parse(body);return createQuote(ownerId,input.clientId);}
   if(method==='GET'&&id&&!operation){const quote=serialize<Quote>(await owned('quotes',id,ownerId));const [settings,versions,history]=await Promise.all([getSettings(ownerId),collection('versions').find({ownerId,quoteId:id},{projection:{version:1,createdAt:1,digest:1}}).sort({version:-1}).toArray(),collection('audit').find({ownerId,objectId:id}).sort({createdAt:-1}).limit(30).toArray()]);const client=quote.clientId?serialize<Client>(await owned('clients',quote.clientId,ownerId)):null;const issued=quote.status!=='draft'&&quote.lastVersion?await collection('versions').findOne({ownerId,quoteId:id,version:quote.lastVersion},{projection:{snapshot:1}}):null;return {quote,client,settings,issuedSnapshot:issued?.snapshot||null,versions:versions.map(v=>({version:v.version,createdAt:v.createdAt,digest:v.digest})),audit:history.map(v=>serialize(v))};}
   if(method==='PATCH'&&id){const input=z.object({data:quoteSchema,revision}).strict().parse(body);await quoteDraft(id,ownerId);let result;await mongo.withSession(async session=>session.withTransaction(async()=>{let clientName='';if(input.data.clientId){const linked=await collection('clients').findOneAndUpdate({_id:input.data.clientId,ownerId},{$inc:{linkVersion:1}},{session,returnDocument:'after'});if(!linked)throw new HttpError(404,'This client no longer exists.');clientName=linked.name;}const updated=await collection('quotes').findOneAndUpdate({_id:id,ownerId,revision:input.revision,status:'draft'},{$set:{...input.data,menuHtml:cleanMenu(input.data.menuHtml),clientName,updatedAt:now()},$inc:{revision:1}},{session,returnDocument:'after'});if(!updated)throw new HttpError(409,'This quotation changed. Reload before saving.');await audit(ownerId,'Saved quotation draft',id,'Saved draft',session);result=serialize(updated);}));return result;}
   if(method==='POST'&&operation==='duplicate'){const q=await owned('quotes',id,ownerId);const data=quoteSchema.parse(Object.fromEntries(Object.keys(newQuote(defaultSettings)).map(k=>[k,q[k]])));return createQuote(ownerId,q.clientId,data);}
   if(method==='POST'&&operation==='revise'){const input=revBody.parse(body);const q=await owned('quotes',id,ownerId);if(q.status==='draft')throw new HttpError(409,'This quotation already has a draft.');return save('quotes',id,ownerId,{status:'draft'},input.revision,'Opened new quotation revision');}
-  if(method==='POST'&&operation==='apply-price'){const input=revBody.parse(body);const q=serialize<Quote>(await quoteDraft(id,ownerId));if(q.adults+q.children===0)throw new HttpError(422,'Add at least one guest before applying a price.');const price=costingEngine(q).pricePerGuest;return save('quotes',id,ownerId,{adultPrice:price,childPrice:price,adultTaxMode:'exclusive',childTaxMode:'exclusive'},input.revision,`Applied suggested price: adults ${q.adultPrice} → ${price}, children ${q.childPrice} → ${price}, ex VAT`);}
+  if(method==='POST'&&operation==='apply-price'){const input=revBody.parse(body);const q=serialize<Quote>(await quoteDraft(id,ownerId));if(q.adults+q.children===0)throw new HttpError(422,'Add at least one guest before applying a price.');const price=costingEngine(q).pricePerGuest;return save('quotes',id,ownerId,{adultPrice:price,childPrice:price,adultTaxMode:'inclusive',childTaxMode:'inclusive'},input.revision,`Applied suggested price: adults ${q.adultPrice} → ${price}, children ${q.childPrice} → ${price}, incl VAT`);}
   if(method==='POST'&&operation==='issue')return issue(ownerId,id,body);
   if(method==='POST'&&operation==='status'){const input=z.object({status:z.enum(['accepted','declined','expired']),revision}).strict().parse(body);const q=await owned('quotes',id,ownerId);if(q.status!=='issued')throw new HttpError(409,'Only an issued quotation can be marked accepted, declined or expired.');return save('quotes',id,ownerId,{status:input.status},input.revision,`Manually marked ${input.status}; no payment recorded`);}
  }

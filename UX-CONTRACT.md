@@ -49,3 +49,5 @@ Required: npm run typecheck, npm run lint, npm test, npm run build, npm run test
 # Client maintenance
 
 The client list provides an explicit Edit client link. Editing loads only editable schema fields, excluding stored metadata. Saving returns to Clients. Delete requires an app-owned confirmation, revision check and owner authorization. Permanent deletion is allowed only for clients without linked quotations; linked clients can be archived. Client deletion and quote linking coordinate through transactional writes to prevent dangling client references. Issued PDF snapshots remain unchanged.
+
+Quotation drafts can be edited from an explicit list action. Temporary empty numeric input is allowed while typing and produces a provisional zero in previews; save still validates the original values. New customer rates default to VAT inclusive; legacy tax bases are preserved and available under advanced controls. Private cost input stays private. The review route saves before navigation, loads the actual full PDF, issues only after confirmation, and sends only after recipient confirmation when configured.

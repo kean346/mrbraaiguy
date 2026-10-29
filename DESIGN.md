@@ -83,3 +83,7 @@ Lucide icons use consistent 18–20px strokes with labels for primary navigation
 ## Contrast refinement
 
 Cards and the top bar use subtle warm-ivory borders at 15% opacity and smoked charcoal fills, without the button rim. Buttons retain liquid reflections at reduced opacity, with warm parchment arrow discs instead of brilliant white. Keep text and keyboard focus legible; soften decorative contrast rather than reducing content contrast.
+
+## Quotation workspace simplification
+
+Proposal and private costs share one editing column with section anchors. The right side renders the customer document from the PDF HTML template, with explicit pending/error feedback and no private costs. A dedicated Print view / PDF route provides final PDF inspection, issue confirmation, recipient review and conditional email sending. Light preview controls explicitly use charcoal text.

@@ -15,3 +15,7 @@ In Vercel → Project `mrbraaiguy` → Settings → Environment Variables, confi
 Redeploy `main` after saving variables. Open `/login`, enter the shared password, and verify that `/dashboard` loads. The browser receives a signed, HttpOnly, SameSite cookie valid for 12 hours. Password attempts are limited to five per 15 minutes per client address. `/setup` redirects to `/login`, and public account registration does not exist.
 
 Atlas must allow Vercel's outbound connection. Use a dedicated, least-privilege database user, TLS, backups and a restore test before importing real customers. Verify PDF preview and download on Vercel because hosted Chromium behavior must be checked in its actual runtime.
+
+## Optional quotation email delivery
+
+Set `RESEND_API_KEY` and `QUOTE_EMAIL_FROM` privately in Vercel Production, then redeploy. The sender must be verified in Resend. Without both settings the review screen offers download and manual email handoff, not a send button. Send requires confirmation of recipient and the latest issued PDF. Provider acceptance is reported separately from delivery; no delivery webhook is configured. Retries in the same review session reuse a provider idempotency key. No live email has been sent or verified by the implementation tests.
