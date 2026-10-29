@@ -1,7 +1,7 @@
 ---
 version: alpha
-name: Ember Glass
-description: A private open-fire dining studio with a smoked-glass workspace and editorial proposals.
+name: Mr Braai Guy Quotation Studio
+description: A private open-fire dining studio with a firelit workspace and editorial proposals.
 colors:
   background: '#100F0E'
   surface: '#1A1917'
@@ -30,7 +30,7 @@ components:
   dialog: {}
 ---
 
-# Ember Glass design system
+# Mr Braai Guy quotation studio design system
 
 ## Overview
 
@@ -47,6 +47,8 @@ Near-black owns the canvas, nearly black charcoal the panels, warm gold carries 
 ## Typography
 
 Cormorant Garamond brings hospitality character to page titles and proposal headings; DM Sans handles fields, navigation and numerical work. Body 14–16px with 1.55 line height; title 32–44px. Tabular numerals for currency; no uppercase paragraphs. Genuine official logo is the inspected 3508×2244 raster asset; no invented vector claim.
+
+The navigation uses the Mr Braai Guy logo alone. It appears bright white and prominent on the dark rail, without a secondary product name beside it.
 
 ## Layout
 
