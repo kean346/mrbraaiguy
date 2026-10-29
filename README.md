@@ -8,10 +8,9 @@ Requirements: Node.js 22+, npm, Docker for the local replica set, and Chromium (
 
 1. `npm ci`
 2. `npm run db:start`
-3. Copy `.env.example` to `.env.local`. Set a random `BETTER_AUTH_SECRET` of at least 32 characters, `OWNER_EMAIL`, and the local Mongo URI. Keep the file private.
-4. Temporarily add `OWNER_BOOTSTRAP_PASSWORD` (12+ characters) to `.env.local`, then run `npm run owner:create`. Remove that key afterward. Public sign-up is disabled. If the owner already exists, the script changes nothing.
-5. Optionally run `npm run seed:demo` to create one synthetic client, menu and draft. It is idempotent.
-6. `npm run dev`, then open `http://localhost:3000/login` and sign in with the owner credentials.
+3. Copy `.env.example` to `.env.local`. Set a random `BETTER_AUTH_SECRET` of at least 32 characters, a unique `APP_ACCESS_PASSWORD`, and the local Mongo URI. Keep the file private.
+4. Optionally run `npm run seed:demo` to create one synthetic client, menu and draft. It is idempotent.
+5. Run `npm run dev`, open `http://localhost:3000/login`, and enter the shared workspace password.
 
 `npm run build` and `npm run start` serve the production build. A real business deployment needs a dedicated MongoDB Atlas replica set URI, a stable HTTPS `BETTER_AUTH_URL`, a separately stored strong auth secret and an installed Chromium binary for server PDF generation. The PDF preview and export are server-rendered with Chromium from the last saved draft or frozen issued version; unsaved editor changes require Save draft before the preview updates. On Vercel the app now selects the packaged `@sparticuz/chromium` binary; local development continues to use `/usr/bin/chromium`. Confirm PDF preview and export in the actual deployment before business use, since a local build does not prove Vercel runtime behavior. Set secrets only in the host's secret manager. Restrict database network access and credentials to this app. Do not copy the local database or synthetic test credentials into production.
 
@@ -19,7 +18,7 @@ Requirements: Node.js 22+, npm, Docker for the local replica set, and Chromium (
 
 | Capability | Status | Notes |
 | --- | --- | --- |
-| Owner sign-in, private routes and downloads | Working locally | Better Auth, owner email gate, no public sign-up; password recovery is not implemented |
+| Shared password gate, private routes and downloads | Working locally | Signed 12-hour HttpOnly cookie, rate-limited password entry, no public registration |
 | Clients | Working locally | Create/edit/search/archive/restore, quote history, basic consent status |
 | Menu vault | Working locally | Rich paste/edit, sanitisation, search/duplicate, independent quote copy |
 | Proposal studio | Working locally | Draft autosave, optional child rate, extra states, explicit tax basis, PDF preview |
@@ -39,14 +38,14 @@ Customer PDFs are generated from a sanitized public projection. Private cost lin
 
 ## Checks and data care
 
-Run `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`. Browser integration needs the local database, owner account and a local-only `E2E_OWNER_PASSWORD` matching that owner in `.env.local`; then run `npm run test:e2e`. The browser tests create synthetic records, exercise a real UI create/edit/save/reload journey plus issue/revision/history, and write screenshots plus a sample PDF under `artifacts/` (Git-ignored). Remove `E2E_OWNER_PASSWORD` after testing. The static premium UI audit result is in `docs/premium-audit.json`.
+Run `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`. Browser integration needs the local database and `APP_ACCESS_PASSWORD` in `.env.local`; then run `npm run test:e2e`. The browser tests create synthetic records, exercise a real UI create/edit/save/reload journey plus issue/revision/history, and write screenshots plus a sample PDF under `artifacts/` (Git-ignored). The static premium UI audit result is in `docs/premium-audit.json`.
 
 The local Docker volume persists across app restarts. For production, schedule encrypted Atlas backups with point-in-time recovery appropriate to your retention needs. Test restoring a backup into a separate, access-controlled database before relying on it. Limit access to source contact information in `docs/source-analysis/`; the directory is Git-ignored and must never be served. No real contact data, customer PDFs or credentials belong in Git or public assets.
 
 ## Architecture
 
-Next.js App Router and React serve the owner interface; Better Auth stores users/sessions in MongoDB. The official MongoDB driver stores owner-scoped clients, menu templates, quotes, settings, audit records and issued versions. Zod validates mutations, Decimal.js computes minor-unit totals, and Chromium renders A4 PDFs from the same public projection used for issue. A local replica set enables transactional reference allocation and version freezing. [DESIGN.md](DESIGN.md) and [UX-CONTRACT.md](UX-CONTRACT.md) record the visual and interaction contracts.
+Next.js App Router and React serve the private interface. A rate-limited shared password gate issues a signed 12-hour HttpOnly cookie. The official MongoDB driver stores workspace-scoped clients, menu templates, quotes, settings, audit records and issued versions. Zod validates mutations, Decimal.js computes minor-unit totals, and Chromium renders A4 PDFs from the same public projection used for issue. A local replica set enables transactional reference allocation and version freezing. [DESIGN.md](DESIGN.md) and [UX-CONTRACT.md](UX-CONTRACT.md) record the visual and interaction contracts.
 
 ## Vercel and Atlas production setup
 
-See [docs/vercel-setup.md](docs/vercel-setup.md) for the exact environment variables, Atlas network setup, owner creation, redeployment and checks. The public design preview works without those settings; the private dashboard requires them.
+See [docs/vercel-setup.md](docs/vercel-setup.md) for the exact environment variables, Atlas network setup, shared password, redeployment and checks. The public design preview works without those settings; the private dashboard requires them.

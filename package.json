@@ -12,7 +12,6 @@
     "test": "vitest run",
     "test:e2e": "node --env-file=.env.local node_modules/@playwright/test/cli.js test",
     "db:start": "bash scripts/mongo.sh",
-    "owner:create": "tsx --env-file=.env.local scripts/owner.ts",
     "seed:demo": "tsx --env-file=.env.local scripts/seed.ts"
   },
   "dependencies": {
@@ -23,7 +22,6 @@
     "@tiptap/pm": "3.32.0",
     "@tiptap/react": "3.32.0",
     "@tiptap/starter-kit": "3.32.0",
-    "better-auth": "1.7.14",
     "csv-parse": "^6.1.0",
     "decimal.js": "^10.6.0",
     "lucide-react": "^0.577.0",

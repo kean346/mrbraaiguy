@@ -1,21 +1,17 @@
-# Make the private Vercel app usable
+# Vercel and Atlas setup
 
-The public `/preview.html` is a synthetic design preview. `/dashboard`, sign-in and quotation data require a production MongoDB replica set and authentication secret. A Vercel build can be Ready while the server routes fail; the 28 October 2026 build log specifically reported Better Auth's default-secret error.
+The public `/preview.html` is a synthetic design preview. The working CRM, private costing and customer PDFs are protected by one shared workspace password.
 
-1. In MongoDB Atlas, create a dedicated project and cluster for Ember Glass. Create one database user with a long, unique password and only the access needed for this app's database. Copy Atlas's **Node.js driver SRV connection string** and insert the database user's password in Atlas's secure UI or a local secret manager. Keep TLS enabled. Configure Atlas Network Access for Vercel's outbound connections. Ordinary Vercel functions do not provide a fixed outbound IP by default; a broad Atlas IP rule such as `0.0.0.0/0` is a security tradeoff and should only be used with a strong unique database user, least privilege and TLS. Fixed egress or private networking is preferable when available.
-2. In Vercel → Project `mrbraaiguy` → Settings → Environment Variables, add the following for **Production**. Never paste values into GitHub or chat.
+In Vercel → Project `mrbraaiguy` → Settings → Environment Variables, configure these values for **Production**:
 
-   | Name | Value |
-   | --- | --- |
-   | `MONGODB_URI` | Atlas SRV connection string for the dedicated database user |
-   | `MONGODB_DB` | `ember_glass` (non-secret) |
-   | `BETTER_AUTH_URL` | `https://mrbraaiguy.vercel.app` |
-   | `BETTER_AUTH_SECRET` | New random secret of at least 32 characters, generated securely; use the same value for initial owner provisioning |
-   | `OWNER_EMAIL` | The exact email address to be allowed into the private app |
-   | `OWNER_SETUP_CODE` | Unique cryptographically random code of at least 32 characters, stored privately only during initial setup |
+| Name | Value |
+| --- | --- |
+| `MONGODB_URI` | Atlas SRV connection string for the dedicated database user |
+| `MONGODB_DB` | `ember_glass` |
+| `BETTER_AUTH_URL` | `https://mrbraaiguy.vercel.app` (retained as the trusted application origin) |
+| `BETTER_AUTH_SECRET` | Random cookie-signing secret of at least 32 characters |
+| `APP_ACCESS_PASSWORD` | Unique shared workspace password; if omitted, the existing `OWNER_SETUP_CODE` is used as a compatibility fallback |
 
-3. Redeploy `main` so Vercel's production functions receive the new variables. Check Runtime Logs for connection or authentication errors. A Ready build alone does not validate the server routes.
-4. After redeploying, visit `/setup` in an external browser. Enter the private `OWNER_SETUP_CODE` and choose a strong password. The route creates only the `OWNER_EMAIL` account, enforces five attempts per 15 minutes per client IP, and rejects all subsequent setup requests once the account exists. Remove `OWNER_SETUP_CODE` from Vercel after success and redeploy. Never send the code or password in chat.
-5. Visit `/login` in an external browser, sign in as the owner, open `/dashboard`, and create a synthetic draft. In Business settings, confirm VAT registration/rate, sender identity and approved terms before attempting to issue. Verify PDF preview/download on Vercel; the code includes a serverless Chromium package, but its actual hosted runtime must be checked.
+Redeploy `main` after saving variables. Open `/login`, enter the shared password, and verify that `/dashboard` loads. The browser receives a signed, HttpOnly, SameSite cookie valid for 12 hours. Password attempts are limited to five per 15 minutes per client address. `/setup` redirects to `/login`, and public account registration does not exist.
 
-No real customer data should be imported until access, backups and a restore test are in place. Connected email and Zoho import remain unconfigured features. This setup does not change the public Mr Braai Guy website.
+Atlas must allow Vercel's outbound connection. Use a dedicated, least-privilege database user, TLS, backups and a restore test before importing real customers. Verify PDF preview and download on Vercel because hosted Chromium behavior must be checked in its actual runtime.
