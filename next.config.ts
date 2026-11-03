@@ -10,7 +10,7 @@ const privateFrameHeader = {key:'X-Frame-Options',value:'SAMEORIGIN'};
 const config: NextConfig = {
   serverExternalPackages:['mongodb','puppeteer-core','@sparticuz/chromium'],
   poweredByHeader:false,
-  outputFileTracingIncludes:{'/api/workspace/*':['./node_modules/@sparticuz/chromium/bin/**']},
+  outputFileTracingIncludes:{'/api/workspace/*':['./node_modules/@sparticuz/chromium/bin/**','./node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2','./node_modules/@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2','./node_modules/@fontsource/dm-sans/files/dm-sans-latin-600-normal.woff2','./public/brand/logo.png']},
   async headers(){return [
     {source:'/:path*',headers:sharedHeaders},
     {source:'/:section(dashboard|quotes|clients|menus|settings|audit)/:path*',headers:[privateFrameHeader]},
