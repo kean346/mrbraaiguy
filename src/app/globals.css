@@ -130,3 +130,10 @@ a.button.primary::after{content:'›';flex:0 0 30px;width:30px;height:30px;displ
 @media(min-width:1171px){.split-editor{grid-template-columns:minmax(0,1fr) minmax(400px,.95fr)}.split-editor .form-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1170px){.preview-column{position:static}.live-proposal{height:650px}.editor-jumps{position:sticky;top:144px;z-index:5;background:#211e19;padding:10px;border-radius:12px}}
 @media(max-width:600px){.review-pdf{min-height:430px;height:65vh}.live-proposal{height:540px;min-height:0}.review-actions .button{flex:1}.editor-jumps{top:140px;font-size:12px;gap:10px}}
+
+/* Quotation disclosures keep the everyday composition flow short. */
+.quote-options > summary { cursor: pointer; font: 600 1rem/1.5 var(--font-body); color: var(--foreground); padding: 10px 0; }
+.quote-options > summary:hover { color: var(--accent); }
+.quote-options > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.quote-options[open] > summary { margin-bottom: 14px; }
+.quote-options .quote-options { margin-top: 12px; }

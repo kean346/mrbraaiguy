@@ -74,7 +74,7 @@ Lucide icons use consistent 18–20px strokes with labels for primary navigation
 
 ## Do's and Don'ts
 
-- Do keep private costs visibly separate from the proposal and apply suggestions explicitly.
+- Do keep the quote editor focused on customer pricing; stored legacy costs remain private and unchanged.
 - Do make pasted menu prose the largest writing surface.
 - Do preserve issued PDFs and label every total as a quotation, never collected revenue.
 - Don't use fictional metrics, stock logos, unrelated photography or generic SaaS gradients.
@@ -86,4 +86,6 @@ Cards and the top bar use subtle warm-ivory borders at 15% opacity and smoked ch
 
 ## Quotation workspace simplification
 
-Proposal and private costs share one editing column with section anchors. The right side renders the customer document from the PDF HTML template, with explicit pending/error feedback and no private costs. A dedicated Print view / PDF route provides final PDF inspection, issue confirmation, recipient review and conditional email sending. Light preview controls explicitly use charcoal text.
+The November 3 client revision prioritises quick quotation composition. One authoring column contains client/event, guest prices, menu and additional services. Private costing, cost lines and suggested-price controls are removed from the editor; legacy stored data is retained. Times/dates, service options and default booking terms use native disclosures without resetting values. Shared Field/Select/Button/RichEditor retain ownership; native select/date popups remain intentional. Draft autosave and the review/issue route remain canonical.
+
+Customer PDFs use one Arial sans-serif family, charcoal on white, 10pt body, 22pt title and 12pt section headings. Menu headings are normalised to 11pt so pasted content cannot introduce competing display styles. Fine neutral rules structure event details, line items and totals. Empty inclusions, exclusions and terms sections are omitted. Issued PDF bytes remain immutable; this template affects new previews and future issues.
